@@ -58,14 +58,20 @@ async function getSongs(folder){
   return songs
 }
 
-const playMusic = (track, pause = false) => {
-  currentSong.src = `/${currFolder}/` + track
-  if(!pause){
-    currentSong.play()
-    play.src = "Images/pause.svg"
+async function getSongUrl(folder, songName) {
+  const songUrl = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${folder}/${songName}`;
+  return songUrl;
+}
+
+async function playMusic(track, pause = false) {
+  const songUrl = await getSongUrl(currFolder, track);
+  currentSong.src = songUrl;
+  if (!pause) {
+    currentSong.play();
+    play.src = "Images/pause.svg";
   }
-  document.querySelector(".songinfo").innerHTML = decodeURI(track)
-  document.querySelector(".songtime").innerHTML = "00:00 / 00:00"
+  document.querySelector(".songinfo").innerHTML = decodeURI(track);
+  document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 }
 
 async function displayAlbums() {
