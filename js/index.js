@@ -228,7 +228,8 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
   currFolder = folder;
-  let a = await fetch(`/${folder}/`);
+  // Make sure the URL is correct
+  let a = await fetch(`https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${folder}/`);
   let response = await a.text();
 
   let div = document.createElement("div");
@@ -270,7 +271,7 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
-  currentSong.src = `/${currFolder}/` + track;
+  currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
   if (!pause) {
     currentSong.play();
     play.src = "Images/pause.svg";
