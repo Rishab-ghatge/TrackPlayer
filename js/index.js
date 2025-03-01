@@ -226,21 +226,69 @@ function secondsToMinutesSeconds(seconds) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 
+// async function getSongs(folder) {
+//   currFolder = folder;
+//   // Make sure the URL is correct
+//   let a = await fetch(`https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${folder}/`);
+//   let response = await a.text();
+
+//   let div = document.createElement("div");
+//   div.innerHTML = response;
+
+//   let as = div.getElementsByTagName("a");
+//   songs = [];
+//   for (let index = 0; index < as.length; index++) {
+//     const element = as[index];
+//     if (element.href.endsWith(".mp3")) {
+//       songs.push(element.href.split(`/${folder}/`)[1]);
+//     }
+//   }
+
+//   // Show all the songs in the playlist
+//   let songUl = document.querySelector(".songList").getElementsByTagName("ul")[0];
+//   songUl.innerHTML = "";
+//   for (const song of songs) {
+//     songUl.innerHTML = songUl.innerHTML + `<li><img class="edit" src="Images/music.svg" alt="${song}">
+//                                            <div class="info">
+//                                              <div>${song.replaceAll("%20", " ")}</div>
+//                                              <div></div>
+//                                            </div>
+//                                            <div class="playNow">
+//                                              <span>play now</span>
+//                                              <img src="Images/play.svg" alt="playNow">
+//                                            </div> </li>`;
+//   }
+
+//   // Attach an event listener to each song
+//   Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach(e => {
+//     e.addEventListener("click", element => {
+//       console.log(e.querySelector(".info").firstElementChild.innerHTML);
+//       playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
+//     });
+//   });
+
+//   return songs;
+// }
 async function getSongs(folder) {
   currFolder = folder;
-  // Make sure the URL is correct
-  let a = await fetch(`https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${folder}/`);
-  let response = await a.text();
 
-  let div = document.createElement("div");
-  div.innerHTML = response;
+  // Use GitHub API to get the contents of the folder
+  const apiUrl = `https://api.github.com/repos/Rishab-ghatge/TrackPlayer/contents/${folder}`;
+  let response = await fetch(apiUrl);
+  
+  if (!response.ok) {
+    console.error("Error fetching the song directory.");
+    return;
+  }
 
-  let as = div.getElementsByTagName("a");
+  let files = await response.json();
   songs = [];
-  for (let index = 0; index < as.length; index++) {
-    const element = as[index];
-    if (element.href.endsWith(".mp3")) {
-      songs.push(element.href.split(`/${folder}/`)[1]);
+
+  // Filter for mp3 files and construct their raw URLs
+  for (let file of files) {
+    if (file.type === 'file' && file.name.endsWith('.mp3')) {
+      // Construct the raw URL for the mp3 file
+      songs.push(file.download_url);
     }
   }
 
@@ -250,7 +298,7 @@ async function getSongs(folder) {
   for (const song of songs) {
     songUl.innerHTML = songUl.innerHTML + `<li><img class="edit" src="Images/music.svg" alt="${song}">
                                            <div class="info">
-                                             <div>${song.replaceAll("%20", " ")}</div>
+                                             <div>${song.split('/').pop().replaceAll("%20", " ")}</div>
                                              <div></div>
                                            </div>
                                            <div class="playNow">
@@ -262,8 +310,9 @@ async function getSongs(folder) {
   // Attach an event listener to each song
   Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach(e => {
     e.addEventListener("click", element => {
-      console.log(e.querySelector(".info").firstElementChild.innerHTML);
-      playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
+      const songName = e.querySelector(".info").firstElementChild.innerHTML.trim();
+      console.log(songName);
+      playMusic(songName);
     });
   });
 
