@@ -410,29 +410,59 @@ let currentSongIndex = 0; // Add a variable to track the current song index
 //   document.querySelector(".songinfo").innerHTML = decodedSongName;
 //   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 // };
+// const playMusic = (track, pause = false) => {
+//   // Extract the song name from the track
+//   const songName = track.split("/").pop();
+
+//   // Update the source of the current song
+//   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
+
+//   // Reset currentTime to 0 to start the song from the beginning
+//   currentSong.currentTime = 0;
+
+//   // Ensure the song plays if it's not paused
+//   if (!pause) {
+//     currentSong.play().then(() => {
+//       play.src = "Images/pause.svg";  // Update play icon to pause
+//     }).catch((error) => {
+//       console.error("Error playing the song:", error);
+//     });
+//   }
+
+//   // Decode the song name to show it properly in the UI
+//   const decodedSongName = decodeURIComponent(songName);
+
+//   // Update the song name display in the play bar
+//   document.querySelector(".songinfo").innerHTML = decodedSongName;
+//   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+// };
 const playMusic = (track, pause = false) => {
   // Extract the song name from the track
   const songName = track.split("/").pop();
 
-  // Update the source of the current song
+  // Update the audio source to the new song
   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
 
-  // Reset currentTime to 0 to start the song from the beginning
+  // Reset currentTime to 0 to start from the beginning
   currentSong.currentTime = 0;
 
-  // Ensure the song plays if it's not paused
-  if (!pause) {
-    currentSong.play().then(() => {
-      play.src = "Images/pause.svg";  // Update play icon to pause
-    }).catch((error) => {
-      console.error("Error playing the song:", error);
-    });
-  }
+  // Stop the current song if it's playing
+  currentSong.pause();
 
-  // Decode the song name to show it properly in the UI
+  // Ensure the song is loaded, then play it
+  currentSong.load(); // Force reloading the audio element
+
+  // Wait for the audio element to be ready and then play it
+  currentSong.play().then(() => {
+    play.src = "Images/pause.svg"; // Change the play button to pause
+  }).catch((error) => {
+    console.error("Error playing the song:", error);
+  });
+
+  // Decode the song name to show it correctly in the play bar
   const decodedSongName = decodeURIComponent(songName);
 
-  // Update the song name display in the play bar
+  // Update the song name display in the UI
   document.querySelector(".songinfo").innerHTML = decodedSongName;
   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 };
@@ -563,6 +593,19 @@ async function main() {
   // next.addEventListener("click", () => {
   //   // Go to the next song if possible
   //   if (currentSongIndex < songs.length - 1) {
+  //     playMusic(songs[currentSongIndex + 1]);
+  //   }
+  // });
+  // previous.addEventListener("click", () => {
+  //   if (currentSongIndex > 0) {
+  //     // Go to the previous song and play it
+  //     playMusic(songs[currentSongIndex - 1]);
+  //   }
+  // });
+  
+  // next.addEventListener("click", () => {
+  //   if (currentSongIndex < songs.length - 1) {
+  //     // Go to the next song and play it
   //     playMusic(songs[currentSongIndex + 1]);
   //   }
   // });
