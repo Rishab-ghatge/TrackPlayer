@@ -319,13 +319,28 @@ async function getSongs(folder) {
   return songs;
 }
 
+// const playMusic = (track, pause = false) => {
+//   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
+//   if (!pause) {
+//     currentSong.play();
+//     play.src = "Images/pause.svg";
+//   }
+//   document.querySelector(".songinfo").innerHTML = decodeURI(track);
+//   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+// };
 const playMusic = (track, pause = false) => {
+  // Extract song name from the full URL (if it's a URL)
+  const songName = track.split("/").pop(); // This will get the last part of the URL, which is the song name
+  
   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
+
   if (!pause) {
     currentSong.play();
     play.src = "Images/pause.svg";
   }
-  document.querySelector(".songinfo").innerHTML = decodeURI(track);
+
+  // Display the song name in the play bar
+  document.querySelector(".songinfo").innerHTML = songName; // Show only the song name
   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 };
 
