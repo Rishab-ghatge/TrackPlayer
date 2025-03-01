@@ -328,10 +328,25 @@ async function getSongs(folder) {
 //   document.querySelector(".songinfo").innerHTML = decodeURI(track);
 //   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 // };
+// const playMusic = (track, pause = false) => {
+//   // Extract song name from the full URL (if it's a URL)
+//   const songName = track.split("/").pop(); // This will get the last part of the URL, which is the song name
+  
+//   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
+
+//   if (!pause) {
+//     currentSong.play();
+//     play.src = "Images/pause.svg";
+//   }
+
+//   // Display the song name in the play bar
+//   document.querySelector(".songinfo").innerHTML = songName; // Show only the song name
+//   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+// };
 const playMusic = (track, pause = false) => {
   // Extract song name from the full URL (if it's a URL)
-  const songName = track.split("/").pop(); // This will get the last part of the URL, which is the song name
-  
+  const songName = track.split("/").pop(); // Get the last part of the URL (song name)
+
   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
 
   if (!pause) {
@@ -339,11 +354,13 @@ const playMusic = (track, pause = false) => {
     play.src = "Images/pause.svg";
   }
 
-  // Display the song name in the play bar
-  document.querySelector(".songinfo").innerHTML = songName; // Show only the song name
+  // Decode the song name to replace "%20" with spaces
+  const decodedSongName = decodeURIComponent(songName); // Decode URL encoding
+
+  // Display the decoded song name in the play bar
+  document.querySelector(".songinfo").innerHTML = decodedSongName;
   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 };
-
 async function displayAlbums() {
   // Base URL for GitHub Pages hosting
   const baseURL = "https://Rishab-ghatge.github.io/TrackPlayer"; // Replace with your GitHub username
