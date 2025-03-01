@@ -363,24 +363,50 @@ async function getSongs(folder) {
 // };
 let currentSongIndex = 0; // Add a variable to track the current song index
 
+// const playMusic = (track, pause = false) => {
+//   // Find the song name from the track
+//   const songName = track.split("/").pop();
+  
+//   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
+
+//   // Find and store the current song index
+//   currentSongIndex = songs.indexOf(track); // Set the index of the current song
+
+//   if (!pause) {
+//     currentSong.play();
+//     play.src = "Images/pause.svg";
+//   }
+
+//   // Decode the song name to replace "%20" with spaces
+//   const decodedSongName = decodeURIComponent(songName); // Decode URL encoding
+
+//   // Display the decoded song name in the play bar
+//   document.querySelector(".songinfo").innerHTML = decodedSongName;
+//   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+// };
 const playMusic = (track, pause = false) => {
-  // Find the song name from the track
+  // Find the song name from the track (remove path, get just file name)
   const songName = track.split("/").pop();
   
+  // Update the audio source to the new track
   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
 
-  // Find and store the current song index
-  currentSongIndex = songs.indexOf(track); // Set the index of the current song
+  // Reset currentTime to 0 for a clean start when switching tracks
+  currentSong.currentTime = 0;
 
+  // Set the current song index after the song is updated
+  currentSongIndex = songs.indexOf(track);
+
+  // Ensure the song starts playing (if not paused)
   if (!pause) {
     currentSong.play();
-    play.src = "Images/pause.svg";
+    play.src = "Images/pause.svg";  // Change the play button to show "pause"
   }
 
-  // Decode the song name to replace "%20" with spaces
-  const decodedSongName = decodeURIComponent(songName); // Decode URL encoding
+  // Decode the song name to display it without URL encoding
+  const decodedSongName = decodeURIComponent(songName);
 
-  // Display the decoded song name in the play bar
+  // Update the UI with the current song name
   document.querySelector(".songinfo").innerHTML = decodedSongName;
   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 };
@@ -501,16 +527,29 @@ async function main() {
   //     playMusic(songs[index + 1]);
   //   }
   // });
+  // previous.addEventListener("click", () => {
+  //   // Go to the previous song if possible
+  //   if (currentSongIndex > 0) {
+  //     playMusic(songs[currentSongIndex - 1]);
+  //   }
+  // });
+  
+  // next.addEventListener("click", () => {
+  //   // Go to the next song if possible
+  //   if (currentSongIndex < songs.length - 1) {
+  //     playMusic(songs[currentSongIndex + 1]);
+  //   }
+  // });
   previous.addEventListener("click", () => {
-    // Go to the previous song if possible
     if (currentSongIndex > 0) {
+      // Go to the previous song and play it
       playMusic(songs[currentSongIndex - 1]);
     }
   });
   
   next.addEventListener("click", () => {
-    // Go to the next song if possible
     if (currentSongIndex < songs.length - 1) {
+      // Go to the next song and play it
       playMusic(songs[currentSongIndex + 1]);
     }
   });
