@@ -343,11 +343,34 @@ async function getSongs(folder) {
 //   document.querySelector(".songinfo").innerHTML = songName; // Show only the song name
 //   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 // };
-const playMusic = (track, pause = false) => {
-  // Extract song name from the full URL (if it's a URL)
-  const songName = track.split("/").pop(); // Get the last part of the URL (song name)
+// const playMusic = (track, pause = false) => {
+//   // Extract song name from the full URL (if it's a URL)
+//   const songName = track.split("/").pop(); // Get the last part of the URL (song name)
 
+//   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
+
+//   if (!pause) {
+//     currentSong.play();
+//     play.src = "Images/pause.svg";
+//   }
+
+//   // Decode the song name to replace "%20" with spaces
+//   const decodedSongName = decodeURIComponent(songName); // Decode URL encoding
+
+//   // Display the decoded song name in the play bar
+//   document.querySelector(".songinfo").innerHTML = decodedSongName;
+//   document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+// };
+let currentSongIndex = 0; // Add a variable to track the current song index
+
+const playMusic = (track, pause = false) => {
+  // Find the song name from the track
+  const songName = track.split("/").pop();
+  
   currentSong.src = `https://raw.githubusercontent.com/Rishab-ghatge/TrackPlayer/main/${currFolder}/` + track;
+
+  // Find and store the current song index
+  currentSongIndex = songs.indexOf(track); // Set the index of the current song
 
   if (!pause) {
     currentSong.play();
@@ -465,17 +488,30 @@ async function main() {
   });
 
   // Add an event listener to previous and next song
+  // previous.addEventListener("click", () => {
+  //   let index = songs.indexOf(currentSong.src.split("/").slice('-1')[0]);
+  //   if ((index - 1) >= 0) {
+  //     playMusic(songs[index - 1]);
+  //   }
+  // });
+
+  // next.addEventListener("click", () => {
+  //   let index = songs.indexOf(currentSong.src.split("/").slice('-1')[0]);
+  //   if ((index + 1) < songs.length) {
+  //     playMusic(songs[index + 1]);
+  //   }
+  // });
   previous.addEventListener("click", () => {
-    let index = songs.indexOf(currentSong.src.split("/").slice('-1')[0]);
-    if ((index - 1) >= 0) {
-      playMusic(songs[index - 1]);
+    // Go to the previous song if possible
+    if (currentSongIndex > 0) {
+      playMusic(songs[currentSongIndex - 1]);
     }
   });
-
+  
   next.addEventListener("click", () => {
-    let index = songs.indexOf(currentSong.src.split("/").slice('-1')[0]);
-    if ((index + 1) < songs.length) {
-      playMusic(songs[index + 1]);
+    // Go to the next song if possible
+    if (currentSongIndex < songs.length - 1) {
+      playMusic(songs[currentSongIndex + 1]);
     }
   });
 
